@@ -12,11 +12,11 @@
 #include <stdlib.h>
 #include <math.h>
 
-static const double Kp = 2.;
-static const double Ki = 0.5;
-static const double Kd = 1.;
-static const double Tf = 4.;
-static const double K = 1.;
+static const double Kp = 9.;
+static const double Ki = 5;
+static const double Kd = 6.;
+static const double Tf = 2.;
+static const double K = 4.;
 static const double T = 3.;
 static const double h = .1;
 
@@ -40,6 +40,7 @@ double pid(double e) {
 
 	uold_2 = uold_1;
 	uold_1 = u;
+	printf("%f\n", u);
 
 	return u;
 }
@@ -73,7 +74,7 @@ int main(void) {
 	while (fscanf(fp_in, "%lf", &r) != EOF) {
 		y = plant(u);
 		u = pid(r - y);
-		fprintf(fp_out, "%f\n", u);
+		fprintf(fp_out, "%f\n", y);
 	}
 
 	fclose(fp_in);
