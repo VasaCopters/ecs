@@ -15,13 +15,14 @@
 #include <stdbool.h>
 #include <time.h>
 
-static const double Kp = 9.;
-static const double Ki = 5;
-static const double Kd = 6.;
-static const double Tf = 2.;
-static const double K = 4.;
+static const double Kp = 4.;
+static const double Ki = .5;
+static const double Kd = 2.;
+static const double Tf = 4.;
+static const double K = 2.;
 static const double T = 3.;
-static const double h = .1;
+static const double h_plant = .1;
+static const double h_controller = 1;
 
 static pthread_mutex_t mx;
 
@@ -38,13 +39,13 @@ double pid(double e) {
 	static double uold_1 = 0.0;
 	static double uold_2 = 0.0;
 
-	double alpha = (h - 2*Tf)/(h + 2*Tf);
-	double beta = (2*Kd)/(h + 2*Tf);
-	double a0 = (Kp - h*Ki/2 - beta/alpha);
+	double alpha = (h_controller - 2*Tf)/(h_controller + 2*Tf);
+	double beta = (2*Kd)/(h_controller + 2*Tf);
+	double a0 = (Kp - h_controller*Ki/2 - beta/alpha);
 
 	double u = -alpha*a0*eold_2 +
-               (h*Ki*alpha + a0*(alpha - 1) - beta*(1 + 1/alpha))*eold_1 +
-               (a0 + h*Ki + beta*(1 + 1/alpha))*e +
+               (h_controller*Ki*alpha + a0*(alpha - 1) - beta*(1 + 1/alpha))*eold_1 +
+               (a0 + h_controller*Ki + beta*(1 + 1/alpha))*e +
                alpha*uold_2 - (alpha-1)*uold_1;
 
 	eold_2 = eold_1;
@@ -52,7 +53,7 @@ double pid(double e) {
 
 	uold_2 = uold_1;
 	uold_1 = u;
-	printf("%f\n", u);
+//	printf("%f\n", u);
 
 	return u;
 }
@@ -60,7 +61,7 @@ double pid(double e) {
 double plant(double u) {
 	static double y_old = 0.0;
 
-	double y = exp(-h/T)*y_old + K*(1-exp(-h/T))*u;
+	double y = exp(-h_plant/T)*y_old + K*(1-exp(-h_plant/T))*u;
 
 	y_old = y;
 	return y;
@@ -76,8 +77,8 @@ void *process()
 	}
 
 	struct timespec ts;
-	ts.tv_sec = 0;
-	ts.tv_nsec = 100000000;
+	ts.tv_sec = 1;
+	ts.tv_nsec = 0;
 	
 	while (is_running)
 	{
@@ -102,8 +103,8 @@ void *controller()
 	}
 
 	struct timespec ts;
-	ts.tv_sec = 1;
-	ts.tv_nsec = 0;
+	ts.tv_sec = 0;
+	ts.tv_nsec = 100000000;
 
 	while (fscanf(fp_in, "%lf", &r) != EOF) {
 		pthread_mutex_lock(&mx);
