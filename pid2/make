@@ -1,0 +1,2 @@
+#!/bin/bash
+gcc pid.c -lm -pthread -o pid -std=c99
