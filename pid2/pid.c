@@ -15,9 +15,9 @@
 #include <stdbool.h>
 #include <time.h>
 
-static const double Kp = 4.;
-static const double Ki = .5;
-static const double Kd = 2.;
+static const double Kp = 1.5;
+static const double Ki = 0.5;
+static const double Kd = .0;
 static const double Tf = 4.;
 static const double K = 2.;
 static const double T = 3.;
@@ -31,7 +31,7 @@ static double y = 0.0;
 static double u = 0.0;
 static double r = 0.0;
 
-static bool is_running = 1;
+static volatile bool is_running = true;
 
 double pid(double e) {
 	static double eold_1 = 0.0;
@@ -77,8 +77,8 @@ void *process()
 	}
 
 	struct timespec ts;
-	ts.tv_sec = 1;
-	ts.tv_nsec = 0;
+	ts.tv_sec = 0;
+	ts.tv_nsec = 100000000;
 	
 	while (is_running)
 	{
@@ -103,8 +103,8 @@ void *controller()
 	}
 
 	struct timespec ts;
-	ts.tv_sec = 0;
-	ts.tv_nsec = 100000000;
+	ts.tv_sec = 1;
+	ts.tv_nsec = 0;
 
 	while (fscanf(fp_in, "%lf", &r) != EOF) {
 		pthread_mutex_lock(&mx);
