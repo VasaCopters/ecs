@@ -1,5 +1,5 @@
-clear all;
-clc;
+%clear all;
+%clc;
 
 Kv = [1 0 0 0
       0 1 0 0
