@@ -30,17 +30,15 @@ wx_0 = theta_dot_0;
 wy_0 = phi_dot_0;
 wz_0 = psi_dot_0;
 
-
-
-A_trans =  (1/m)*[ -f_0*cos(theta_0),                             0,             0;
-                   -f_0*sin(theta_0)*sin(phi_0),  f_0*cos(theta_0)*cos(phi_0),   0;
-                   -f_0*sin(theta_0)*cos(phi_0), -f_0*cos(theta_0)*sin(phi_0),   0];
+A_trans = (1/m)*[ -f_0*cos(theta_0),                             0,             0;
+                  -f_0*sin(theta_0)*sin(phi_0),  f_0*cos(theta_0)*cos(phi_0),   0;
+                  -f_0*sin(theta_0)*cos(phi_0), -f_0*cos(theta_0)*sin(phi_0),   0];
           
 B_trans = (1/m)*[ -sin(theta_0); cos(theta_0)*sin(phi_0); cos(theta_0)*cos(phi_0) ];
 
 K_trans = (1/m)*[ f_0*theta_0*cos(theta_0);
                   f_0*sin(theta_0)*sin(phi_0)*theta_0 - f_0*cos(theta_0)*cos(phi_0)*phi_0;
-                  f_0*sin(theta_0)*cos(phi_0)*theta_0 + f_0*cos(theta_0)*sin(phi_0)*phi_0];
+                  f_0*sin(theta_0)*cos(phi_0)*theta_0 + f_0*cos(theta_0)*sin(phi_0)*phi_0 - m*g];
 
 A_angle = [  0,                  -wz_0*(Izz - Iyy)/Ixx,  -wy_0*(Izz - Iyy)/Ixx;
             -wz_0*(Ixx - Izz)/Iyy,   0,                  -wx_0*(Ixx - Izz)/Iyy;
