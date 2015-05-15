@@ -1,12 +1,16 @@
 clear all;
 clc;
 
-Engine_front = 2.25;
-Engine_right = 2.25;
+Engine_front = 1.2;
+Engine_right = 1.2;
 Engine_left = 1.2;
 Engine_back = 1.2;
 
- Kv = 14000*[1 0 0 0
+Qu = diag([10 20 20 5]);
+
+Qx = diag([1 1 1 1 1 1 1 1 1 1 1 1]);
+
+Kv = 14000*[1 0 0 0
              0 1 0 0
              0 0 1 0
              0 0 0 1]';      % rpm/Volt
