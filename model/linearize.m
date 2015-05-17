@@ -68,6 +68,3 @@ constant = [ zeros(3,1);
              K_trans];
          
 end
-      
-      
-
