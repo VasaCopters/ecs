@@ -21,10 +21,9 @@ w = [0 0 0]';
 
 % operating point : order - angles_pitch.roll.yaw,angles_dot,translation_x.y.z, translation_dot
 operating_q = [0 0 0 0 0 0 0 0 0.2 0 0 0]';
-operating_u = [1.3 1.3 1.3 1.3]';
+operating_pwm = [ 1.2 1.2 1.2 1.2]';
 
-[A, B, constant] = linearize(operating_q, operating_u);
+% [A, B, constant] = linearize(operating_q, operating_thrust);
 
+[A, B, constant] = linearize_pwm(operating_q, operating_pwm);
 Klqr = lqr(A,B,Qx,Qu);
-
-
