@@ -1,50 +1,46 @@
-function [T_b] = thrust(omega)
+function [T_b] = thrust(voltage)
 
-w1 = omega(1);
-w2 = omega(2);
-w3 = omega(3);
-w4 = omega(4);
+voltage = min(voltage, [1 1 1 1]'*4);
+voltage = max(voltage, [0 0 0 0]'*4);
+
+w1 = voltage(1)*14000;
+w2 = voltage(2)*14000;
+w3 = voltage(3)*14000;
+w4 = voltage(4)*14000;
 
 d = 0.046;
 
 %Thrust (in gram) = 1.0942e-07*rpm² – 2.1059e-04*rpm + 0.15417.
 
-
 C1 = 1.0942e-07;
 C2 = -2.1059e-04;
+C3 = 0.15417;
 
-% C3 = 0.15417;
- 
-if w1 < 2000 && w1 > -2000
-    C13 = 0;
-else
-    C13 = 0.15417;
+Cq = 1*(10^(-9));            %%      *(60/(2*pi))^2;                    % Cq in rpm
+
+
+f1 = 0.25*(C1*w1^2 + C2*w1 + C3)*9.8/1000;
+f2 = 0.25*(C1*w2^2 + C2*w2 + C3)*9.8/1000;
+f3 = 0.25*(C1*w3^2 + C2*w3 + C3)*9.8/1000;
+f4 = 0.25*(C1*w4^2 + C2*w4 + C3)*9.8/1000;
+
+
+%-- Approximate linear when really low rpm --
+lu = 1183;
+k = 0.25*(C1*lu^2 + C2*lu + C3)*9.8/1000/lu;
+
+if w1 < lu
+    f1 = k * w1;
 end
-
-if w2 < 2000 && w2 > -2000
-    C23 = 0;
-else
-    C23 = 0.15417;
+if w2 < lu
+    f2 = k * w2;
 end
-
-if w3 < 2000 && w3 > -2000
-    C33 = 0;
-else
-    C33 = 0.15417;
+if w3 < lu
+    f3 = k * w3;
 end
-
-if w4 < 2000 && w4 > -2000
-    C43 = 0;
-else
-    C43 = 0.15417;
+if w4 < lu
+    f4 = k * w4;
 end
-
-Cq = 1*(10^(-9))*(60/(2*pi))^2;                    % Cq in rpm
-
-f1 = 0.25*(C1*w1^2 + C2*w1 + C13)*9.8/1000;
-f2 = 0.25*(C1*w2^2 + C2*w2 + C23)*9.8/1000;
-f3 = 0.25*(C1*w3^2 + C2*w3 + C33)*9.8/1000;
-f4 = 0.25*(C1*w4^2 + C2*w4 + C43)*9.8/1000;
 
 f = f1 + f2 + f3 + f4;
 
