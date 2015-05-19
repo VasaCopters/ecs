@@ -26,4 +26,4 @@ operating_pwm = [ 1.2 1.2 1.2 1.2]';
 % [A, B, constant] = linearize(operating_q, operating_thrust);
 
 [A, B, constant] = linearize_pwm(operating_q, operating_pwm);
-Klqr = lqr(A,B,Qx,Qu)
+Klqr = lqr(A,B,Qx,Qu);
