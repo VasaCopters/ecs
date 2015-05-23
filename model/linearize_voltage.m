@@ -1,4 +1,4 @@
-function [A, B, constant] = linearize_pwm(operating_q, operating_pwm)
+function [A, B, C, D, constant] = linearize_voltage(operating_q, operating_pwm)
 % function [A, B2] = linearize_pwm(operating_q, operating_pwm)
 % constants
 Ixx = 2.09*10^(-05);
@@ -100,5 +100,9 @@ Delta =    [ zeros(3,1);
              K_trans];
 
 constant = Delta - B2*(operating_pwm);           % constant is 12x1 vector
+
+C = eye(12);
+
+D = zeros(12,4);
 
 end

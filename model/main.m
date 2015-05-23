@@ -1,6 +1,8 @@
 clear all;
 clc;
 
+Ts = 0.015;
+
 Qu = diag([5 5 5 5]);
 Qx = 1e-1*diag([0.1 0.1 0.1 0.1 0.1 0.1 100 100 100 0.1 0.1 0.1]);
 
@@ -15,5 +17,12 @@ operating_voltage = [ 1.2 1.2 1.2 1.2]';
 
 % [A, B, constant] = linearize(operating_q, operating_thrust);
 
-[A, B, constant] = linearize_voltage(operating_q, operating_voltage);
-Klqr = lqr(A,B,Qx,Qu);
+[A, B, C, D, constant] = linearize_voltage(operating_q, operating_voltage);
+Klqr_continuous = lqr(A,B,Qx,Qu);
+
+sys = ss(A,B,C,D);
+
+sysd = c2d(sys,Ts);
+
+Klqr_d = lqrd(A,B,Qx,Qu,Ts);       % which one to use
+Klqr_discrete = lqrd(a,b,Qx,Qu,Ts);       % Which one to use
