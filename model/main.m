@@ -1,7 +1,7 @@
 clear all;
 clc;
 
-Ts = 0.015;
+Ts = 1/100;
 
 Qu = diag([5 5 5 5]);
 Qx = 1e-1*diag([0.1 0.1 0.1 0.1 0.1 0.1 100 100 100 0.1 0.1 0.1]);
@@ -21,8 +21,7 @@ operating_voltage = [ 1.2 1.2 1.2 1.2]';
 Klqr_continuous = lqr(A,B,Qx,Qu);
 
 sys = ss(A,B,C,D);
-
 sysd = c2d(sys,Ts);
 
-Klqr_d = lqrd(A,B,Qx,Qu,Ts);       % which one to use
-Klqr_discrete = lqrd(a,b,Qx,Qu,Ts);       % Which one to use
+Klqr_d = lqrd(A,B,Qx,Qu,Ts)                % which one to use
+% Klqr_discrete = lqrd(a,b,Qx,Qu,Ts);       % Which one to use
