@@ -12,11 +12,12 @@ Kv = 14000;
 Ct = 1.0942e-07;
 C1 = 0.25*(Ct)*9.8/1000;                                                    % grams to newton                           
 Cq = 1*(10^(-9))*(60/(2*pi))^2;                                             % Cq in rpm
-d = 0.046;
-
-C_propeller = [  C1   C1    C1    C1;
-                 0    d*C1  0    -d*C1;
-                -d*C1 0     d*C1  0;
+% d = 0.046;                           % Plus mode
+  d = 0.0325;                          % Cross mode
+  
+C_propeller = [  C1    C1     C1    C1;
+                 d*C1 -d*C1  -d*C1  d*C1;
+                -d*C1 -d*C1   d*C1  d*C1;
                 -Cq   Cq   -Cq    Cq];
 %--------------------------------------------------------------------------
 theta_0 = operating_q(1);

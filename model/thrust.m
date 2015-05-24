@@ -8,7 +8,8 @@ w2 = voltage(2)*14000;
 w3 = voltage(3)*14000;
 w4 = voltage(4)*14000;
 
-d = 0.046;
+d = 0.0325;             % for the Cross mode
+% d = 0.046;            % for the Plus mode
 
 %Thrust (in gram) = 1.0942e-07*rpm² – 2.1059e-04*rpm + 0.15417.
 
@@ -28,7 +29,6 @@ f4 = 0.25*(C1*w4^2 + C2*w4 + C3)*9.8/1000;
 %-- Approximate linear when really low rpm --
 lu = 1183;
 k = 0.25*(C1*lu^2 + C2*lu + C3)*9.8/1000/lu;
-
 if w1 < lu
     f1 = k * w1;
 end
@@ -44,8 +44,11 @@ end
 
 f = f1 + f2 + f3 + f4;
 
-T1 = d*(f2 - f4);
-T2 = d*(f3 - f1);
+% T1 = d*(f2 - f4);                       % Plus Mode
+% T2 = d*(f3 - f1);                       % Plus Mode
+
+T1 = d*(f1 + f4 - f2 - f3);               % Cross Mode
+T2 = d*(f4 + f3 - f2 - f1);               % Cross Mode
 
 T3 = -Cq*w1^2 + Cq*w2^2 - Cq*w3^2 + Cq*w4^2;
 

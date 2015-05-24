@@ -2,7 +2,7 @@ clear all;
 clc;
 
 Ts = 1/100;
-
+Kv = 14000;
 Qu = diag([5 5 5 5]);
 Qx = 1e-1*diag([0.1 0.1 0.1 0.1 0.1 0.1 100 100 100 0.1 0.1 0.1]);
 
@@ -23,5 +23,9 @@ Klqr_continuous = lqr(A,B,Qx,Qu);
 sys = ss(A,B,C,D);
 sysd = c2d(sys,Ts);
 
-Klqr_d = lqrd(A,B,Qx,Qu,Ts)                % which one to use
-% Klqr_discrete = lqrd(a,b,Qx,Qu,Ts);       % Which one to use
+Klqr_d = lqrd(A,B,Qx,Qu,Ts)                 % which one to use
+
+%% LQR gain conversion in degrees
+
+Klqrd_degrees = [Klqr_d(:,1:6)/(180/pi), Klqr_d(:,7:end)]
+
