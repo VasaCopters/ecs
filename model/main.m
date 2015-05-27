@@ -1,16 +1,18 @@
 clear all;
 clc;
 
-Ts = 1/100;
+Ts = 1/500;
 Kv = 14000;
-Qu = diag([5 5 5 5]);
-Qx = 1e-1*diag([50 50 10 5 5 5 0.1 0.1 0.1 0.1 0.1 10]);
+Qu = 5*diag(ones(4,1));
+Qx = diag([5 5 500000000 0.05 0.05 0.0005 5 5 5 0.1 0.1 0.1]);
 m = 0.027;
 g = 9.8;
 
 % operating point : order - angles_pitch.roll.yaw,angles_dot,translation_x.y.z, translation_dot
 operating_q = [0 0 0 0 0 0 0 0 0 0 0 0]';
 operating_voltage = control_PWM([m*g,0,0,0]')
+%operating_voltage = 2.13*ones(4,1);
+angle_initial = [pi/6; -pi/3; -pi/4];
 
 % [A, B, constant] = linearize(operating_q, operating_thrust);
 
@@ -32,7 +34,7 @@ Klqr_d = lqrd(A,B,Qx,Qu,Ts)                % Discrete for real system
 
 Kr_discrete = pinv(Dd - (Cd - Dd*Klqr_d)*(Ad - Bd*Klqr_d)\Bd)
 
-eig(Ad - Bd*Klqr_d)                         % eigen values
+abs(eig(Ad - Bd*Klqr_d))                         % eigen values
 %% LQR gain conversion in degrees
 clc
 Klqrd_degrees = [Klqr_d(:,1:6)/(180/pi), Klqr_d(:,7:end)]
@@ -60,3 +62,9 @@ r_op = kr * dr;
 kdx = klqr * dx;
 du = r_op - kdx;
 u = du + u_op;
+
+dlmwrite('klqrd_degrees.csv', Klqrd_degrees, 'delimiter', ',', 'precision', '%.9f')
+dlmwrite('kr_degrees.csv', Kr_degrees, 'delimiter', ',', 'precision', '%.9f')
+% to fix the spacing of the csv file with awk:
+% awk -F',' '{for(i=1;i<=NF;i++)if($i !~ /^-/){$i=" "$i","}else{$i=$i","}
+% }1' klqrd_degrees.csv > klqr_fixed.csv
